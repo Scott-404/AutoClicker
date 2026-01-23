@@ -1,0 +1,229 @@
+﻿<Window x:Class="SeroAutoClicker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeroAutoClicker"
+        xmlns:viewmodels="clr-namespace:SeroAutoClicker.ViewModels"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Sero Auto Clicker" 
+        Height="500" 
+        Width="450"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
+
+    <!-- MainViewModel drives all bindings + commands -->
+    <Window.DataContext>
+        <viewmodels:MainViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <!-- Single source for the app title text -->
+        <system:String x:Key="AppTitle">Sero Auto Clicker</system:String>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="{StaticResource AppTitle}" 
+                   FontSize="24" 
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,15"
+                   Grid.Row="0"/>
+
+        <!-- Activation key selection -->
+        <GroupBox Header="Activation Key (Toggle On/Off)" Grid.Row="1" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox SelectedItem="{Binding Settings.ActivationKey}" 
+                         Width="100"
+                         Margin="5">
+                    <ComboBoxItem>F1</ComboBoxItem>
+                    <ComboBoxItem>F2</ComboBoxItem>
+                    <ComboBoxItem>F3</ComboBoxItem>
+                    <ComboBoxItem>F4</ComboBoxItem>
+                    <ComboBoxItem>F5</ComboBoxItem>
+                    <ComboBoxItem>F6</ComboBoxItem>
+                    <ComboBoxItem>F7</ComboBoxItem>
+                    <ComboBoxItem>F8</ComboBoxItem>
+                    <ComboBoxItem>F9</ComboBoxItem>
+                    <ComboBoxItem>F10</ComboBoxItem>
+                    <ComboBoxItem>F11</ComboBoxItem>
+                    <ComboBoxItem>F12</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Text="Press this key to toggle auto-clicking" 
+                          VerticalAlignment="Center"
+                          Margin="10,0,0,0"
+                          FontStyle="Italic"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Click mode selection -->
+        <GroupBox Header="Click Type" Grid.Row="2" Margin="0,0,0,10">
+            <StackPanel>
+                <RadioButton Content="Left Click (Fastest)" 
+                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=LeftClick}"
+                           Margin="5"/>
+                <RadioButton Content="Right Click" 
+                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RightClick}"
+                           Margin="5"/>
+                <RadioButton Content="Double Click" 
+                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=DoubleClick}"
+                           Margin="5"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Speed controls -->
+        <GroupBox Header="Speed Settings" Grid.Row="3" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Click interval (ms) -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Text="Delay between clicks (ms):" 
+                              VerticalAlignment="Center" 
+                              Width="150"/>
+                    <TextBox Text="{Binding Settings.ClickInterval, UpdateSourceTrigger=PropertyChanged}" 
+                            Width="60" 
+                            Margin="5,0"/>
+                    <Slider Minimum="0" 
+                           Maximum="1000" 
+                           Value="{Binding Settings.ClickInterval}"
+                           TickFrequency="10"
+                           Width="150"
+                           Margin="10,0,5,0"/>
+                    <TextBlock Text="{Binding Settings.ClickInterval}" 
+                              VerticalAlignment="Center"
+                              MinWidth="30"/>
+                </StackPanel>
+
+                <!-- UI hint for precision / max speed -->
+                <TextBlock Grid.Row="1" 
+                          Text="Can set to 0.5ms or higher (0 = maximum speed)"
+                          FontStyle="Italic"
+                          Foreground="Gray"
+                          Margin="5,0,5,0"
+                          TextWrapping="Wrap"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Repeat / click limit -->
+        <GroupBox Header="Repeat Settings" Grid.Row="4" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Content="Limit Clicks" 
+                         IsChecked="{Binding Settings.IsRepeatEnabled}"
+                         VerticalAlignment="Center"
+                         Grid.Column="0"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0"
+                           IsEnabled="{Binding Settings.IsRepeatEnabled}">
+                    <TextBlock Text="Count:" 
+                              VerticalAlignment="Center"
+                              Margin="5,0"/>
+                    <TextBox Text="{Binding Settings.RepeatCount, UpdateSourceTrigger=PropertyChanged}" 
+                            Width="60" 
+                            Margin="5,0"/>
+                    <Slider Minimum="1" 
+                           Maximum="10000" 
+                           Value="{Binding Settings.RepeatCount}"
+                           Width="150"
+                           Margin="10,0"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding Settings.RepeatCount}" 
+                          Grid.Column="2" 
+                          VerticalAlignment="Center"
+                          MinWidth="30"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Live cursor readout -->
+        <Border Grid.Row="5" 
+                BorderBrush="LightGray" 
+                BorderThickness="1"
+                CornerRadius="5"
+                Margin="0,0,0,10"
+                Padding="10"
+                Background="#F5F5F5">
+            <StackPanel>
+                <TextBlock Text="Current Cursor Position" 
+                          FontWeight="Bold"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding CursorPosition}" 
+                          HorizontalAlignment="Center"
+                          FontSize="16"
+                          Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Running / status panel -->
+        <Border Grid.Row="6" 
+                Background="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}"
+                CornerRadius="5"
+                Margin="0,0,0,15"
+                Padding="10">
+            <StackPanel>
+                <TextBlock Text="{Binding IsRunning, Converter={StaticResource BoolToStatusConverter}}"
+                          FontWeight="Bold"
+                          FontSize="16"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding StatusMessage}"
+                          HorizontalAlignment="Center"
+                          Margin="0,5,0,0"
+                          TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Spacer -->
+        <Grid Grid.Row="7"/>
+
+        <!-- Primary actions -->
+        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Toggle Clicking" 
+                    Command="{Binding ToggleClickingCommand}"
+                    Width="120"
+                    Height="35"
+                    Margin="5"
+                    Background="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="Start Clicking"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                <Setter Property="Content" Value="Stop Clicking"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Exit" 
+                    Click="ExitButton_Click"
+                    Width="80"
+                    Height="35"
+                    Margin="5"
+                    Background="LightGray"/>
+        </StackPanel>
+    </Grid>
+</Window>

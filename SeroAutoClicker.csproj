@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- WPF desktop app -->
+		<OutputType>WinExe</OutputType>
+
+		<!-- Required for WPF -->
+		<TargetFramework>net8.0-windows</TargetFramework>
+
+		<!-- Nullable reference types on -->
+		<Nullable>enable</Nullable>
+
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- MVVM helpers (ObservableObject, RelayCommand, etc.) -->
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+	</ItemGroup>
+
+</Project>
