@@ -1,22 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- WPF desktop app -->
+		<!-- WPF Desktop Application -->
 		<OutputType>WinExe</OutputType>
 
 		<!-- Required for WPF -->
 		<TargetFramework>net8.0-windows</TargetFramework>
-
-		<!-- Nullable reference types on -->
-		<Nullable>enable</Nullable>
-
 		<UseWPF>true</UseWPF>
+
+		<!-- Quality + language -->
+		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- App icon shown in EXE + taskbar -->
+		<ApplicationIcon>Assets\SeroAutoClicker.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- MVVM helpers (ObservableObject, RelayCommand, etc.) -->
+		<!-- MVVM Toolkit -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Embedded UI assets -->
+		<Resource Include="Assets\SeroLogo.png" />
+		<Resource Include="Assets\SeroAutoClicker.ico" />
 	</ItemGroup>
 
 </Project>

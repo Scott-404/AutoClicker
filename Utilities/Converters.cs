@@ -8,9 +8,12 @@ namespace SeroAutoClicker.Utilities
     // WPF binding converters (kept simple + UI-focused)
     public class BoolToColorConverter : IValueConverter
     {
+        private static readonly Brush ActiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x12, 0x3A, 0x52));   // deep cyan-blue
+        private static readonly Brush InactiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x73, 0x2A, 0x73)); // deep magenta-purple
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value is bool b && b) ? Brushes.LightGreen : Brushes.LightCoral;
+            return (value is bool b && b) ? ActiveBrush : InactiveBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

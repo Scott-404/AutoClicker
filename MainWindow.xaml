@@ -7,13 +7,16 @@
         xmlns:viewmodels="clr-namespace:SeroAutoClicker.ViewModels"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Sero Auto Clicker" 
-        Height="500" 
-        Width="450"
+        Title="Sero Auto Clicker"
+        Width="520"
+        MinWidth="520"
+        SizeToContent="WidthAndHeight"
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
-        Closed="Window_Closed">
+        Closed="Window_Closed"
+        Icon="Assets/SeroAutoClicker.ico"
+        Background="{DynamicResource AppBackgroundBrush}">
 
     <!-- MainViewModel drives all bindings + commands -->
     <Window.DataContext>
@@ -23,34 +26,169 @@
     <Window.Resources>
         <!-- Single source for the app title text -->
         <system:String x:Key="AppTitle">Sero Auto Clicker</system:String>
+
+        <!-- ===== Brand palette (SAFE #AARRGGBB only) ===== -->
+        <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FF0B1020"/>
+        <SolidColorBrush x:Key="PanelBrush" Color="#FF121A33"/>
+        <SolidColorBrush x:Key="PanelBrush2" Color="#FF151F3D"/>
+        <SolidColorBrush x:Key="NeonCyanBrush" Color="#FF43D6FF"/>
+        <SolidColorBrush x:Key="NeonMagentaBrush" Color="#FFFF3FD2"/>
+
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFEAF7FF"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FFA9B7D1"/>
+
+        <SolidColorBrush x:Key="BorderSoftBrush" Color="#332AFFFF"/>
+        <SolidColorBrush x:Key="BorderNeonBrush" Color="#3343D6FF"/>
+
+        <!-- ===== Global text defaults ===== -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderNeonBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PanelBrush}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PanelBrush2}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <!-- ComboBox control -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PanelBrush2}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderSoftBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6"/>
+        </Style>
+
+        <!-- FIX: ComboBox dropdown items -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PanelBrush2}"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="{StaticResource NeonCyanBrush}"/>
+                    <Setter Property="Foreground" Value="#FF0B1020"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style x:Key="NeonButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PanelBrush2}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource NeonCyanBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource NeonMagentaBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
-    <Grid Margin="10">
+    <Grid Margin="14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- 0 Header -->
             <RowDefinition Height="Auto"/>
+            <!-- 1 Activation -->
             <RowDefinition Height="Auto"/>
+            <!-- 2 Click type -->
             <RowDefinition Height="Auto"/>
+            <!-- 3 Speed -->
             <RowDefinition Height="Auto"/>
+            <!-- 4 Repeat -->
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <!-- 5 Cursor -->
             <RowDefinition Height="Auto"/>
+            <!-- 6 Status -->
+            <RowDefinition Height="Auto"/>
+            <!-- 7 Buttons -->
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <TextBlock Text="{StaticResource AppTitle}" 
-                   FontSize="24" 
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,15"
-                   Grid.Row="0"/>
+        <!-- Header (logo + title) -->
+        <Border Grid.Row="0"
+                Background="{StaticResource PanelBrush}"
+                BorderBrush="{StaticResource BorderNeonBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="12"
+                Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Width="56" Height="56"
+                        CornerRadius="12"
+                        Background="{StaticResource PanelBrush2}"
+                        BorderBrush="{StaticResource BorderSoftBrush}"
+                        BorderThickness="1"
+                        VerticalAlignment="Center">
+                    <Image Source="Assets/SeroLogo.png"
+                           Stretch="Uniform"
+                           Margin="6"/>
+                </Border>
+
+                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{StaticResource AppTitle}"
+                               FontSize="28"
+                               FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
         <!-- Activation key selection -->
-        <GroupBox Header="Activation Key (Toggle On/Off)" Grid.Row="1" Margin="0,0,0,10">
+        <GroupBox Header="Activation Key (Toggle On/Off)" Grid.Row="1" Margin="0,0,0,12">
             <StackPanel Orientation="Horizontal">
-                <ComboBox SelectedItem="{Binding Settings.ActivationKey}" 
-                         Width="100"
-                         Margin="5">
+                <ComboBox SelectedItem="{Binding Settings.ActivationKey}"
+                          Width="120"
+                          Margin="6">
                     <ComboBoxItem>F1</ComboBoxItem>
                     <ComboBoxItem>F2</ComboBoxItem>
                     <ComboBoxItem>F3</ComboBoxItem>
@@ -64,67 +202,69 @@
                     <ComboBoxItem>F11</ComboBoxItem>
                     <ComboBoxItem>F12</ComboBoxItem>
                 </ComboBox>
-                <TextBlock Text="Press this key to toggle auto-clicking" 
-                          VerticalAlignment="Center"
-                          Margin="10,0,0,0"
-                          FontStyle="Italic"/>
+
+                <TextBlock Text="Press this key to toggle auto-clicking"
+                           VerticalAlignment="Center"
+                           Margin="12,0,0,0"
+                           FontStyle="Italic"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </StackPanel>
         </GroupBox>
 
         <!-- Click mode selection -->
-        <GroupBox Header="Click Type" Grid.Row="2" Margin="0,0,0,10">
+        <GroupBox Header="Click Type" Grid.Row="2" Margin="0,0,0,12">
             <StackPanel>
-                <RadioButton Content="Left Click (Fastest)" 
-                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=LeftClick}"
-                           Margin="5"/>
-                <RadioButton Content="Right Click" 
-                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RightClick}"
-                           Margin="5"/>
-                <RadioButton Content="Double Click" 
-                           IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=DoubleClick}"
-                           Margin="5"/>
+                <RadioButton Content="Left Click (Fastest)"
+                             IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=LeftClick}"
+                             Margin="6"/>
+                <RadioButton Content="Right Click"
+                             IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RightClick}"
+                             Margin="6"/>
+                <RadioButton Content="Double Click"
+                             IsChecked="{Binding Settings.ClickType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=DoubleClick}"
+                             Margin="6"/>
             </StackPanel>
         </GroupBox>
 
         <!-- Speed controls -->
-        <GroupBox Header="Speed Settings" Grid.Row="3" Margin="0,0,0,10">
+        <GroupBox Header="Speed Settings" Grid.Row="3" Margin="0,0,0,12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Click interval (ms) -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                    <TextBlock Text="Delay between clicks (ms):" 
-                              VerticalAlignment="Center" 
-                              Width="150"/>
-                    <TextBox Text="{Binding Settings.ClickInterval, UpdateSourceTrigger=PropertyChanged}" 
-                            Width="60" 
-                            Margin="5,0"/>
-                    <Slider Minimum="0" 
-                           Maximum="1000" 
-                           Value="{Binding Settings.ClickInterval}"
-                           TickFrequency="10"
-                           Width="150"
-                           Margin="10,0,5,0"/>
-                    <TextBlock Text="{Binding Settings.ClickInterval}" 
-                              VerticalAlignment="Center"
-                              MinWidth="30"/>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Delay between clicks (ms):"
+                               VerticalAlignment="Center"
+                               Width="170"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBox Text="{Binding Settings.ClickInterval, UpdateSourceTrigger=PropertyChanged}"
+                             Width="70"
+                             Margin="6,0"/>
+                    <Slider Minimum="0"
+                            Maximum="1000"
+                            Value="{Binding Settings.ClickInterval}"
+                            TickFrequency="10"
+                            Width="200"
+                            Margin="12,0,6,0"/>
+                    <TextBlock Text="{Binding Settings.ClickInterval}"
+                               VerticalAlignment="Center"
+                               MinWidth="34"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
                 </StackPanel>
 
-                <!-- UI hint for precision / max speed -->
-                <TextBlock Grid.Row="1" 
-                          Text="Can set to 0.5ms or higher (0 = maximum speed)"
-                          FontStyle="Italic"
-                          Foreground="Gray"
-                          Margin="5,0,5,0"
-                          TextWrapping="Wrap"/>
+                <TextBlock Grid.Row="1"
+                           Text="Can set to 0.5ms or higher (0 = maximum speed)"
+                           FontStyle="Italic"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="6,0,6,0"
+                           TextWrapping="Wrap"/>
             </Grid>
         </GroupBox>
 
         <!-- Repeat / click limit -->
-        <GroupBox Header="Repeat Settings" Grid.Row="4" Margin="0,0,0,10">
+        <GroupBox Header="Repeat Settings" Grid.Row="4" Margin="0,0,0,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -132,98 +272,106 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <CheckBox Content="Limit Clicks" 
-                         IsChecked="{Binding Settings.IsRepeatEnabled}"
-                         VerticalAlignment="Center"
-                         Grid.Column="0"/>
+                <CheckBox Content="Limit Clicks"
+                          IsChecked="{Binding Settings.IsRepeatEnabled}"
+                          VerticalAlignment="Center"
+                          Margin="6"
+                          Grid.Column="0"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,0"
-                           IsEnabled="{Binding Settings.IsRepeatEnabled}">
-                    <TextBlock Text="Count:" 
-                              VerticalAlignment="Center"
-                              Margin="5,0"/>
-                    <TextBox Text="{Binding Settings.RepeatCount, UpdateSourceTrigger=PropertyChanged}" 
-                            Width="60" 
-                            Margin="5,0"/>
-                    <Slider Minimum="1" 
-                           Maximum="10000" 
-                           Value="{Binding Settings.RepeatCount}"
-                           Width="150"
-                           Margin="10,0"/>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="1"
+                            Margin="12,0"
+                            IsEnabled="{Binding Settings.IsRepeatEnabled}">
+                    <TextBlock Text="Count:"
+                               VerticalAlignment="Center"
+                               Margin="6,0"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBox Text="{Binding Settings.RepeatCount, UpdateSourceTrigger=PropertyChanged}"
+                             Width="80"
+                             Margin="6,0"/>
+                    <Slider Minimum="1"
+                            Maximum="10000"
+                            Value="{Binding Settings.RepeatCount}"
+                            Width="200"
+                            Margin="12,0"/>
                 </StackPanel>
 
-                <TextBlock Text="{Binding Settings.RepeatCount}" 
-                          Grid.Column="2" 
-                          VerticalAlignment="Center"
-                          MinWidth="30"/>
+                <TextBlock Text="{Binding Settings.RepeatCount}"
+                           Grid.Column="2"
+                           VerticalAlignment="Center"
+                           MinWidth="40"
+                           Margin="6,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </Grid>
         </GroupBox>
 
         <!-- Live cursor readout -->
-        <Border Grid.Row="5" 
-                BorderBrush="LightGray" 
+        <Border Grid.Row="5"
+                BorderBrush="{StaticResource BorderNeonBrush}"
                 BorderThickness="1"
-                CornerRadius="5"
-                Margin="0,0,0,10"
-                Padding="10"
-                Background="#F5F5F5">
+                CornerRadius="10"
+                Margin="0,0,0,12"
+                Padding="12"
+                Background="{StaticResource PanelBrush}">
             <StackPanel>
-                <TextBlock Text="Current Cursor Position" 
-                          FontWeight="Bold"
-                          HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding CursorPosition}" 
-                          HorizontalAlignment="Center"
-                          FontSize="16"
-                          Margin="0,5,0,0"/>
+                <TextBlock Text="Current Cursor Position"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                <TextBlock Text="{Binding CursorPosition}"
+                           HorizontalAlignment="Center"
+                           FontSize="18"
+                           Margin="0,6,0,0"/>
             </StackPanel>
         </Border>
 
         <!-- Running / status panel -->
-        <Border Grid.Row="6" 
+        <Border Grid.Row="6"
                 Background="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}"
-                CornerRadius="5"
-                Margin="0,0,0,15"
-                Padding="10">
+                CornerRadius="10"
+                Margin="0,0,0,16"
+                Padding="14"
+                BorderBrush="{StaticResource BorderNeonBrush}"
+                BorderThickness="1">
             <StackPanel>
                 <TextBlock Text="{Binding IsRunning, Converter={StaticResource BoolToStatusConverter}}"
-                          FontWeight="Bold"
-                          FontSize="16"
-                          HorizontalAlignment="Center"/>
+                           FontWeight="Bold"
+                           FontSize="18"
+                           HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding StatusMessage}"
-                          HorizontalAlignment="Center"
-                          Margin="0,5,0,0"
-                          TextWrapping="Wrap"/>
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </StackPanel>
         </Border>
 
-        <!-- Spacer -->
-        <Grid Grid.Row="7"/>
-
         <!-- Primary actions -->
-        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Toggle Clicking" 
-                    Command="{Binding ToggleClickingCommand}"
-                    Width="120"
-                    Height="35"
-                    Margin="5"
-                    Background="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}">
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding ToggleClickingCommand}"
+                    Width="170"
+                    Height="44"
+                    Margin="8">
                 <Button.Style>
-                    <Style TargetType="Button">
+                    <Style TargetType="Button" BasedOn="{StaticResource NeonButtonStyle}">
                         <Setter Property="Content" Value="Start Clicking"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsRunning}" Value="True">
                                 <Setter Property="Content" Value="Stop Clicking"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource NeonMagentaBrush}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Content="Exit" 
+
+            <Button Content="Exit"
                     Click="ExitButton_Click"
-                    Width="80"
-                    Height="35"
-                    Margin="5"
-                    Background="LightGray"/>
+                    Width="120"
+                    Height="44"
+                    Margin="8"
+                    Style="{StaticResource NeonButtonStyle}"
+                    BorderBrush="{StaticResource BorderSoftBrush}"/>
         </StackPanel>
     </Grid>
 </Window>
